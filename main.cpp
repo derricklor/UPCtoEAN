@@ -8,49 +8,60 @@ using namespace std;
 
 string toUPC(string);
 string toEAN(string);
-int loop(void);
+void loop(void);
 
 int main(int argc, char* argv[])
 {
-	string test1 = "123456789012";
-	string test2 = "G123456789012";
-	string at;
 
 
 	if (argc == 1) {
-		cout << "no args found entering loop mode" << endl;
 
 		loop();
 		exit(0);
 	}
+	else if (argc == 2) {
 
-	if (argc == 2) {
-		cout << "args found" << endl;
-		cout << argv[1] << endl;
+		vector<string> container;
+
 		fstream f;
 		f.open(argv[1]);
+
+		string e;
+		f >> e;
+
+		while ( f.eof() == false) {
+			//add to container
+			f >> e;
+			container.push_back(e);
+		}
+
+		vector<string>::iterator p;
+		for (p = container.begin(); p != container.end(); p++) {
+			//convert to EAN or UPC
+			int len = p[0].length();
+			if ( len == 12) {
+
+				cout << toEAN(p[0]) << endl;
+			}
+			else if (len ==13)
+			{
+				cout << toUPC(p[0]) << endl;
+			}
+
+		}
+
 		f.close();
-		//convert to EAN or UPC
+	}
+	else {
+		cout << "Incorrect format detected.\nRun program with no arguments to enter mode select. " <<
+			"\nRun program with single argument file_name.txt to convert detected codes to UPC or EAN, vice versa." << endl;
 	}
 
-	/*cout << "Should print out 123456789012= " << toUPC(test1) << endl;
-
-	cout << "Should print out 123456789012= " << toUPC(test2) << endl;
-
-	cout << "Should print out F123456789012= " << toEAN(test1) << endl;
-
-	cout << "Should print out F123456789012= "  << toEAN(test2) << endl;
-
-	cout << argv[0] << endl;
-
-	cout << "Hello" << endl;
-
-	cin >> at;*/
 	return 0;
 }
 
 
-int loop(void) {
+void loop(void) {
 
 	string mode;
 	string code;
@@ -78,7 +89,6 @@ int loop(void) {
 	
 	
 	cout << "exiting program" << endl;
-	return 0;
 }
 
 
